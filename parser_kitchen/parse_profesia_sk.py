@@ -5,6 +5,7 @@ class Info_profesia_sk:
     def __init__(self, file="res.html"):
         self.__file = file
         self.link = f"https://www.profesia.sk"
+        self.vacancies = []
 
     def pars(self):
         with open(self.__file, "r", encoding='utf-8') as f:
@@ -38,7 +39,14 @@ class Info_profesia_sk:
                 else:
                     link = "None"
             except:
-                link_tag = "None"
-            print(f"Vacancy: {title}\nEmployer: {employer}\nLocation: {location}\nSalary: {salary_clean}\nLink: {link}")
-            print("\n\n\n")
+                link = "None"
+
+            self.vacancies.append({
+                "title": title,
+                "employer": employer,
+                "location": location,
+                "salary": salary_clean,
+                "link": link
+            })
+        return self.vacancies
 
