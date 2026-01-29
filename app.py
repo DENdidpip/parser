@@ -6,8 +6,10 @@ def main():
     return render_template("index.html")
 @app.route('/find', methods = ["POST"])
 def parse():
-    job = str(request.form['job'])
-    town = str(request.form['town'])
+    job = str(request.form['job']).replace(" ", "-").lower()
+    print(job)
+    town = str(request.form['town']).replace(" ", "-").lower()
+    print(town)
     data = Our_result(town, job).get_data()
     return render_template("out.html", vacancies=data)
 
