@@ -40,13 +40,13 @@ class Info_profesia_sk:
                     link = "None"
             except:
                 link = "None"
-
-            self.vacancies.append({
-                "title": title,
-                "employer": employer,
-                "location": location,
-                "salary": salary_clean,
-                "link": link
-            })
+            if link != "None":
+                self.vacancies.append({
+                    "title": title,
+                    "employer": employer,
+                    "location": location,
+                    "salary": salary_clean,
+                    "link": link
+                })
         return self.vacancies
 
