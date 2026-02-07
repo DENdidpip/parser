@@ -1,52 +1,38 @@
 from bs4 import BeautifulSoup
 
 class Info_profesia_sk:
+    BASE_URL = "https://www.profesia.sk"
 
     def __init__(self, file="res.html"):
-        self.__file = file
-        self.link = f"https://www.profesia.sk"
+        self.file = file
         self.vacancies = []
 
+    def _get_text(self, parent, tag, class_=None):
+        el = parent.find(tag, class_=class_)
+        return el.text.strip() if el else None
+
     def pars(self):
-        with open(self.__file, "r", encoding='utf-8') as f:
-            html = f.read()
-        soup = BeautifulSoup(html, "html.parser")
+        with open(self.file, "r", encoding="utf-8") as f:
+            soup = BeautifulSoup(f.read(), "html.parser")
+
         for vac in soup.find_all("li", class_="list-row"):
-            try:
-                title = vac.find("h2").text.strip()
-            except:
-                employer = "None"
-            try:
-                employer = vac.find("span", class_="employer").text.strip()
-            except:
-                employer= "None"
-            try:
-                location = vac.find("span", class_= "job-location").text.strip()
-            except:
-                location = "None"
-            try:
-                salary_tag = vac.find("span", class_="label-group")
-                if salary_tag:
-                    salary_clean = salary_tag.text.strip().split("\n")[0].strip()
-                else:
-                    salary_clean = "None"
-            except:
-                salary_clean = "None"
-            try:
-                link_tag = vac.find("a", id=lambda x: x and x.startswith("offer"))
-                if link_tag and link_tag.has_attr("href"):
-                    link = self.link + link_tag["href"]
-                else:
-                    link = "None"
-            except:
-                link = "None"
-            if link != "None":
+            title = self._get_text(vac, "h2")
+            employer = self._get_text(vac, "span", "employer")
+            location = self._get_text(vac, "span", "job-location")
+
+            salary_tag = vac.find("span", class_="label-group")
+            salary = salary_tag.text.strip().split("\n")[0] if salary_tag else None
+
+            link_tag = vac.find("a", id=lambda x: x and x.startswith("offer"))
+            link = self.BASE_URL + link_tag["href"] if link_tag else None
+
+            if link:
                 self.vacancies.append({
                     "title": title,
                     "employer": employer,
                     "location": location,
-                    "salary": salary_clean,
+                    "salary": salary,
                     "link": link
                 })
-        return self.vacancies
 
+        return self.vacancies

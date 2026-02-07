@@ -3,3 +3,5 @@ beautifulsoup4
 flask
 flask-sqlalchemy
 gunicorn
+selenium
+webdriver_manager
