@@ -1,0 +1,6 @@
+.venv/
+.idea/
+parser_kitchen/__pycache__/parse_profesia_sk.cpython-312.pyc
+*.py[cod]
+*.pyo
+parser_kitchen/login_linkedin.py
