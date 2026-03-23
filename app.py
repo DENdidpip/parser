@@ -1,12 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for
 from parser_kitchen.together import Our_result
+from flask_sqlalchemy import SQLAlchemy
 import smtplib
 import random
 from email.message import EmailMessage
-from parser_kitchen.login_linkedin import EMAIL, PASSWORD
+from parser_kitchen.login_linkedin import EMAIL, PASSWORD, NICK_POSTGRES, PASS_POSTGRES
+from urllib.parse import quote_plus
 
 app = Flask(__name__)
 
+
+db_user = NICK_POSTGRES
+db_pass = PASS_POSTGRES
+db_name = "parser"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@localhost/{db_name}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(120), unique = True, nullable = False)
+    password = db.Column(db.String(50), nullable = False)
+    nick = db.Column(db.String(50), nullable = False)
 class EmailService:
     def __init__(self, email, password):
         self.email = email
@@ -23,10 +40,6 @@ class EmailService:
             smtp.login(self.email, self.password)
             smtp.send_message(msg)
 
-
-# =========================
-# 👤 User manager
-# =========================
 class UserManager:
     def __init__(self):
         self.pending_users = {}
@@ -111,4 +124,6 @@ def verify():
 
 # =========================
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
