@@ -4,18 +4,28 @@ from flask_sqlalchemy import SQLAlchemy
 import smtplib
 import random
 from email.message import EmailMessage
-from parser_kitchen.login_linkedin import EMAIL, PASSWORD, NICK_POSTGRES, PASS_POSTGRES
 from urllib.parse import quote_plus
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
-db_user = NICK_POSTGRES
-db_pass = PASS_POSTGRES
-db_name = "parser"
+db_user = os.getenv("POSTGRES_USER")
+db_pass = os.getenv("POSTGRES_PASSWORD")
+db_name = os.getenv("POSTGRES_DB", "parser")
+db_host = os.getenv("POSTGRES_HOST", "localhost")
+db_port = os.getenv("POSTGRES_PORT", "5432")
+email_key = os.getenv("EMAIL_USER")
+email_key_pass = os.getenv("EMAIL_PASS")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@localhost/{db_name}'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -66,8 +76,8 @@ class UserManager:
 
 
 email_service = EmailService(
-    email=EMAIL,
-    password= PASSWORD
+    email=email_key,
+    password= email_key_pass
 )
 
 user_manager = UserManager()
@@ -126,4 +136,4 @@ def verify():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
