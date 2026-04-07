@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, current_app, session, flash
 from parser_kitchen.together import Our_result
 from .user import db, User
 from .email_verification import EmailService, UserManager
@@ -18,7 +18,13 @@ def setup_services():
             password=current_app.config["EMAIL_PASS"]
         )
 
-
+@main_bp.app_context_processor
+def inject_user():
+    return {
+        "current_user_nick": session.get("user_nick"),
+        "current_user_email": session.get("user_email"),
+        "current_user_id": session.get("user_id")
+    }
 @main_bp.route("/")
 def main():
     return render_template("index.html")
@@ -71,8 +77,19 @@ def verify():
             db.session.add(new_user)
             db.session.commit()
 
-            return "Registration is successful!"
+            session["user_id"] = new_user.id
+            session["user_nick"] = new_user.nick
+            session["user_email"] = new_user.email
 
+            flash("Registration was successful")
+
+            return (redirect(url_for("main.main", email = email)))
         return "Wrong code"
 
     return render_template("verify.html", email=email)
+
+@main_bp.route("/logout")
+def logout():
+    session.clear()
+    flash("Вы вышли из аккаунта", "info")
+    return redirect(url_for("main.main"))
