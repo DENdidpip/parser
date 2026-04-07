@@ -1,9 +1,123 @@
-/* Добавим плавное наведение для карточек */
-.card {
-    transition: transform 0.2s, box-shadow 0.2s;
+/* ===== RESULTS PAGE ===== */
+
+body {
+    background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+    min-height: 100vh;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+/* Заголовок */
+.results-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 30px;
+}
+
+/* Карточки вакансий */
+.vacancy-card {
+    border: none;
+    border-radius: 22px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s ease;
+    padding: 6px;
+}
+
+.vacancy-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.12);
+}
+
+.vacancy-card .card-body {
+    padding: 24px;
+}
+
+.vacancy-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+/* Текст внутри карточки */
+.vacancy-info {
+    color: #4b5563;
+    margin-bottom: 10px;
+    font-size: 0.96rem;
+    line-height: 1.5;
+}
+
+.vacancy-info strong {
+    color: #111827;
+}
+
+/* Зарплата можно чуть выделить */
+.salary-text {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+/* Кнопка перейти */
+.vacancy-link-btn {
+    border-radius: 14px;
+    font-weight: 600;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.vacancy-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(13, 110, 253, 0.22);
+}
+
+/* Кнопка назад */
+.back-btn {
+    border-radius: 14px;
+    font-weight: 600;
+    padding: 10px 22px;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Пустой результат */
+.empty-results {
+    max-width: 700px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 22px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.empty-results h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.empty-results p {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .results-title {
+        font-size: 1.8rem;
+    }
+
+    .vacancy-card .card-body {
+        padding: 20px;
+    }
+
+    .vacancy-title {
+        font-size: 1.08rem;
+    }
 }

@@ -32,7 +32,7 @@
 
             <div class="text-end auth-block">
                 {% if current_user_nick %}
-                    <span class="user-nick">Привет, {{ current_user_nick }}</span>
+                    <span class="user-nick">{{ current_user_nick }}</span>
                     <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light auth-btn">Log out</a>
                 {% else %}
                     <a href="{{ url_for('main.sign_up') }}" class="btn btn-warning auth-btn">Sign up</a>
