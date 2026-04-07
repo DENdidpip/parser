@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, curren
 from parser_kitchen.together import Our_result
 from .user import db, User
 from .email_verification import EmailService, UserManager
+from werkzeug.security import check_password_hash
 
 main_bp = Blueprint("main", __name__)
 
@@ -61,8 +62,19 @@ def sign_up():
 @main_bp.route('/login', methods = ["GET", "POST"])
 def login():
     if request.method == "POST":
-        pass
+        email = request.form["email"]
+        password = request.form["password"]
 
+        user = User.query.filter_by(email = email).first()
+
+        if user and check_password_hash(user.password_hash, password):
+            session["user_id"] = user.id
+            session["user_nick"] = user.nick
+            session["user_email"] = user.email
+            flash("Login successful")
+            return redirect(url_for("main.main"))
+        else:
+            flash("Something is wrong(")
     return render_template("login.html")
 
 
@@ -99,5 +111,4 @@ def verify():
 @main_bp.route("/logout")
 def logout():
     session.clear()
-    flash("Вы вышли из аккаунта", "info")
     return redirect(url_for("main.main"))
