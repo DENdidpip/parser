@@ -58,6 +58,14 @@ def sign_up():
 
     return render_template("sign_up.html")
 
+@main_bp.route('/login', methods = ["GET", "POST"])
+def login():
+    if request.method == "POST":
+        pass
+
+    return render_template("login.html")
+
+
 
 @main_bp.route("/verify", methods=["GET", "POST"])
 def verify():
